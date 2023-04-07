@@ -8,6 +8,7 @@ const {
   deleteApllication,
   acceptApllication,
   rejectApllication,
+  getLoggedUserApllications,
 } = require("../services/applicationServices");
 
 const router = express.Router();
@@ -16,7 +17,7 @@ router
   .route("/")
   .get(
     authServices.protect,
-    authServices.allowedTo("applicant", "admin"),
+    authServices.allowedTo("admin"),
     getApllications
   )
   .post(
@@ -29,7 +30,7 @@ router
   .route("/:id")
   .get(
     authServices.protect,
-    authServices.allowedTo("applicant", "admin"),
+    authServices.allowedTo("admin"),
     getApllication
   )
   .put(
@@ -55,5 +56,12 @@ router
     authServices.protect,
     authServices.allowedTo("applicant"),
     rejectApllication
+  );
+router
+  .route("/myapplications")
+  .get(
+    authServices.protect,
+    authServices.allowedTo("applicant"),
+    getLoggedUserApllications
   );
 module.exports = router;
