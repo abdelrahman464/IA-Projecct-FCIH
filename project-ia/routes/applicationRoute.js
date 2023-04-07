@@ -15,24 +15,22 @@ const router = express.Router();
 
 router
   .route("/")
-  .get(
-    authServices.protect,
-    authServices.allowedTo("admin"),
-    getApllications
-  )
+  .get(authServices.protect, authServices.allowedTo("admin"), getApllications)
   .post(
     authServices.protect,
     authServices.allowedTo("applicant"),
     sendApllication
   );
-
 router
-  .route("/:id")
+  .route("/myapplications")
   .get(
     authServices.protect,
-    authServices.allowedTo("admin"),
-    getApllication
-  )
+    authServices.allowedTo("applicant"),
+    getLoggedUserApllications
+  );
+router
+  .route("/:id")
+  .get(authServices.protect, authServices.allowedTo("admin"), getApllication)
   .put(
     authServices.protect,
     authServices.allowedTo("applicant"),
@@ -57,11 +55,5 @@ router
     authServices.allowedTo("applicant"),
     rejectApllication
   );
-router
-  .route("/myapplications")
-  .get(
-    authServices.protect,
-    authServices.allowedTo("applicant"),
-    getLoggedUserApllications
-  );
+
 module.exports = router;

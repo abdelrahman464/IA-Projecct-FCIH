@@ -101,10 +101,10 @@ exports.rejectApllication = asyncHandler(async (req, res) => {
 // @route   GET /api/v1/applications/myapplications
 // @access  Private/protected (applicant)
 exports.getLoggedUserApllications = asyncHandler((req, res) => {
-  const id = req.user.id;
+  const userId = req.user.id;
   db.query(
     "SELECT * FROM applications WHERE user_id = ? ",
-    [id],
+    [userId],
     (err, results) => {
       if (err) throw new Error(err);
       res.status(200).json({ result: results.length, data: results });
