@@ -7,7 +7,7 @@ const {
   createQualification,
   updateQualification,
   deleteQualification,
-  // searchInJobs,
+  searchInJobs,
 } = require("../services/qualificationServices");
 
 const router = express.Router();
@@ -42,15 +42,11 @@ router
     authServices.allowedTo("admin"),
     deleteQualification
   );
-// router
-//   .route("/search")
-//   .get(
-//     authServices.protect,
-//     authServices.allowedTo("applicant"),
-//     searchInJobs,
-//     (req, res) => {
-//       const filteredRecords = res.locals.filteredRecords;
-//       res.render("search", { results: filteredRecords });
-//     }
-//   );
+router
+  .route("/search")
+  .post(
+    authServices.protect,
+    authServices.allowedTo("applicant"),
+    searchInJobs,
+  );
 module.exports = router;

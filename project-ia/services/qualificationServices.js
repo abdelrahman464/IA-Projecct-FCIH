@@ -79,36 +79,32 @@ exports.deleteQualification = asyncHandler((req, res) => {
 // @desc    search in jobs based on qualifications
 // @route   POST /api/v1/qualifications/search?keyword=:keyword
 // @access  public
-// exports.searchInJobs = asyncHandler((req, res) => {
-//   const searchQuery = req.query.keyword; // get search query from request query parameters
-//   // Build SQL query to search for records that match the search query
-//   const sql = `
-//     SELECT *
-//     FROM qualifications
-//     WHERE description LIKE ?
-//   `;
-//   const values = [`%${searchQuery}%`];
-//   // Execute the SQL query
-//   db.query(sql, values, (err, results) => {
-//     if (err) {
-//       console.error(err);
-//       return res.status(500).send("Internal Server Error");
-//     }
-//     // Store the search word and filtered records in the database
-//     const insertSql = `
-//       INSERT INTO searchedjobs (word, results)
-//       VALUES (?, ?)
-//     `;
-//     const values = [searchQuery, JSON.stringify(results)];
+exports.searchInJobs = asyncHandler((req, res) => {
+  const keyword = req.body.keyword; // get search query from request query parameters
+  // Build SQL query to search for records that match the search query
+  const values = [`%${keyword}%`];
 
-//     db.query(insertSql, values, (err) => {
-//       if (err) {
-//         console.error(err);
-//         return res.status(500).send("Internal Server Error");
-//       }
-//       // Set the filtered records to the response object
-//       res.locals.filteredRecords = results;
-//       next(); // Call the next middleware function
-//     });
-//   });
-// });
+  // Execute the SQL query
+  db.query(
+    `SELECT *
+     FROM qualifications
+     WHERE description LIKE ?`,
+    values,
+    (err, results) => {
+      if (err) throw new Error(err);
+      db.query(
+        `INSERT INTO searchedjobs 
+          (word,results,user_id,job_id	)
+        VALUES
+           (?,?,?,?)`,
+        [keyword, JSON.stringify(results[0]), req.user.id, results[0].job_id],
+        (err, results) => {
+          if (err) throw err;
+        }
+      );
+      res.status(200).json({ result: results.length, data: results });
+    }
+  );
+});
+
+
