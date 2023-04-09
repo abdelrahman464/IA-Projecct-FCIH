@@ -45,16 +45,14 @@ router
   );
 router
   .route("/search")
-  .post(
-    authServices.protect,
-    authServices.allowedTo("applicant"),
-    searchInJobs
-  );
-router
-  .route("/search")
   .get(
     authServices.protect,
     authServices.allowedTo("applicant"),
     getLoggedUserSearchHistory
+  )
+  .post(
+    authServices.protect,
+    authServices.allowedTo("applicant"),
+    searchInJobs
   );
 module.exports = router;
