@@ -1,11 +1,22 @@
 const asyncHandler = require("express-async-handler");
 const db = require("../config/database");
-const ApiError = require("../utils/apiError");
 
 // @desc    Get list of jobs
 // @route   GET /api/v1/jobs
 // @access  public
 exports.getJobs = asyncHandler((req, res) => {
+  db.query(
+    "SELECT * FROM jobs WHERE maxCandidateNumber > num_applicant",
+    (err, results) => {
+      if (err) throw err;
+      res.json(results);
+    }
+  );
+});
+// @desc    Get list of jobs
+// @route   GET /api/v1/jobs/all
+// @access  private/protected (admin)
+exports.getJobsAdmin = asyncHandler((req, res) => {
   db.query("SELECT * FROM jobs", (err, results) => {
     if (err) throw err;
     res.json(results);
@@ -87,7 +98,7 @@ exports.updateJob = asyncHandler(async (req, res) => {
 exports.deleteJob = asyncHandler((req, res) => {
   const id = req.params.id;
   db.query("DELETE FROM Jobs WHERE id = ?", [id], (err, results) => {
-    if (err) return ApiError("cant delete job", 404);
+    if (err) throw err;
     res.json({ message: "Job deleted successfully" });
   });
 });

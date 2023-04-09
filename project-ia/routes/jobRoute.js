@@ -11,23 +11,30 @@ const {
   createJob,
   updateJob,
   deleteJob,
+  getJobsAdmin,
 } = require("../services/jobServices");
 
 const router = express.Router();
 
 router
   .route("/")
-  .get(authServices.protect, authServices.allowedTo("applicant", "admin"), getJobs)
+  .get(authServices.protect, authServices.allowedTo("applicant"), getJobs)
   .post(
     authServices.protect,
     authServices.allowedTo("admin"),
     createJobValidator,
     createJob
   );
-
+router
+  .route("/all")
+  .get(authServices.protect, authServices.allowedTo("admin"), getJobsAdmin);
 router
   .route("/:id")
-  .get(authServices.protect, authServices.allowedTo("applicant", "admin"), getJob)
+  .get(
+    authServices.protect,
+    authServices.allowedTo("applicant", "admin"),
+    getJob
+  )
   .put(
     authServices.protect,
     authServices.allowedTo("admin"),

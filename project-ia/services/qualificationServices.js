@@ -115,7 +115,7 @@ exports.getLoggedUserSearchHistory = asyncHandler((req, res) => {
     [req.user.id],
     (err, results) => {
       if (err) throw new Error(err);
-      res.status(200).json({ result: results.length, data: results });
+      res.status(200).json(results);
     }
   );
 });
