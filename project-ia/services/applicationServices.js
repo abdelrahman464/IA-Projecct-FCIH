@@ -76,8 +76,32 @@ exports.acceptApllication = asyncHandler(async (req, res) => {
   db.query(
     `UPDATE applications SET status = ?  WHERE  id = ?`,
     [status, id],
-    (err, results) => {
+    (err, results, fields) => {
       if (err) throw err;
+      db.query(
+        "SELECT * FROM applications WHERE id = ?",
+        [id],
+        (err, rows, fields) => {
+          if (err) throw err;
+          const updatedItem = rows[0];
+          db.query(
+            "SELECT num_applicant FROM jobs WHERE id = ?",
+            [updatedItem.job_id],
+            (err, results, fields) => {
+              if (err) throw err;
+              const plusNum_applicantByOne = results[0].num_applicant + 1;
+              db.query("UPDATE jobs SET num_applicant = ? WHERE id = ?", [
+                plusNum_applicantByOne,
+                updatedItem.job_id,
+              ]),
+                (err) => {
+                  if (err) throw err;
+                };
+            }
+          );
+        }
+      );
+
       res.json({ message: "applications accepted successfully" });
     }
   );

@@ -45,14 +45,14 @@ router
   .route("/:id/accept")
   .put(
     authServices.protect,
-    authServices.allowedTo("applicant"),
+    authServices.allowedTo("admin"),
     acceptApllication
   );
 router
   .route("/:id/reject")
   .put(
     authServices.protect,
-    authServices.allowedTo("applicant"),
+    authServices.allowedTo("admin"),
     rejectApllication
   );
 

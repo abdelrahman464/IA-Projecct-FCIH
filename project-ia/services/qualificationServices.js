@@ -77,7 +77,7 @@ exports.deleteQualification = asyncHandler((req, res) => {
 });
 
 // @desc    search in jobs based on qualifications
-// @route   POST /api/v1/qualifications/search?keyword=:keyword
+// @route   POST /api/v1/qualifications/search
 // @access  public
 exports.searchInJobs = asyncHandler((req, res) => {
   const keyword = req.body.keyword; // get search query from request query parameters
@@ -94,10 +94,10 @@ exports.searchInJobs = asyncHandler((req, res) => {
       if (err) throw new Error(err);
       db.query(
         `INSERT INTO searchedjobs 
-          (word,results,user_id,job_id	)
+          (word,user_id)
         VALUES
-           (?,?,?,?)`,
-        [keyword, JSON.stringify(results[0]), req.user.id, results[0].job_id],
+           (?,?)`,
+        [keyword, req.user.id],
         (err, results) => {
           if (err) throw err;
         }
@@ -106,5 +106,16 @@ exports.searchInJobs = asyncHandler((req, res) => {
     }
   );
 });
-
-
+// @desc    looged apllicant search history
+// @route   GET /api/v1/qualifications/search
+// @access  public
+exports.getLoggedUserSearchHistory = asyncHandler((req, res) => {
+  db.query(
+    "SELECT * FROM searchedjobs WHERE user_id = ? ",
+    [req.user.id],
+    (err, results) => {
+      if (err) throw new Error(err);
+      res.status(200).json({ result: results.length, data: results });
+    }
+  );
+});

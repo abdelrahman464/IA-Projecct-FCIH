@@ -8,6 +8,7 @@ const {
   updateQualification,
   deleteQualification,
   searchInJobs,
+  getLoggedUserSearchHistory,
 } = require("../services/qualificationServices");
 
 const router = express.Router();
@@ -47,6 +48,13 @@ router
   .post(
     authServices.protect,
     authServices.allowedTo("applicant"),
-    searchInJobs,
+    searchInJobs
+  );
+router
+  .route("/search")
+  .get(
+    authServices.protect,
+    authServices.allowedTo("applicant"),
+    getLoggedUserSearchHistory
   );
 module.exports = router;

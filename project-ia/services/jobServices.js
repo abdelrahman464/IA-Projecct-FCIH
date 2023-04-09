@@ -1,5 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const db = require("../config/database");
+const ApiError = require("../utils/apiError");
 
 // @desc    Get list of jobs
 // @route   GET /api/v1/jobs
@@ -32,9 +33,9 @@ exports.createJob = asyncHandler(async (req, res) => {
   const updated_at = new Date();
   db.query(
     `INSERT INTO jobs 
-      ( position, description,requirements,salary ,status, maxCandidateNumber,created_at,updated_at	)
+      ( position, description,requirements,salary , maxCandidateNumber,created_at,updated_at	)
     VALUES
-       (? , ? , ? , ?,'open',?,?,?)`,
+       (?,?,?, ?,?,?,?)`,
     [
       position,
       description,
@@ -59,24 +60,17 @@ exports.createJob = asyncHandler(async (req, res) => {
 // @access  Private/protected  (admin)
 exports.updateJob = asyncHandler(async (req, res) => {
   const id = req.params.id;
-  const {
-    position,
-    description,
-    requirements,
-    salary,
-    status,
-    maxCandidateNumber,
-  } = req.body;
+  const { position, description, requirements, salary, maxCandidateNumber } =
+    req.body;
   const updated_at = new Date();
   db.query(
-    `UPDATE jobs SET position = ?, description = ?, requirements = ? , salary=?,status=?,
+    `UPDATE jobs SET position = ?, description = ?, requirements = ? , salary=?,
      maxCandidateNumber = ? ,updated_at = ? WHERE  id = ?`,
     [
       position,
       description,
       requirements,
       salary,
-      status,
       maxCandidateNumber,
       updated_at,
       id,
@@ -93,7 +87,7 @@ exports.updateJob = asyncHandler(async (req, res) => {
 exports.deleteJob = asyncHandler((req, res) => {
   const id = req.params.id;
   db.query("DELETE FROM Jobs WHERE id = ?", [id], (err, results) => {
-    if (err) throw err;
+    if (err) return ApiError("cant delete job", 404);
     res.json({ message: "Job deleted successfully" });
   });
 });

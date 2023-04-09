@@ -6,7 +6,7 @@ const mysql = require("mysql");
     host: "localhost",
     user: "root",
     password: "",
-    database: "app",
+    database: "appp",
   });
   connection.connect((err) => {
     if (err) {
@@ -15,6 +15,5 @@ const mysql = require("mysql");
     }
     console.log("Connected to MySQL");
   });
-
 
 module.exports = connection;
