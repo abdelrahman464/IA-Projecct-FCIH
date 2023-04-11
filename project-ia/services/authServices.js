@@ -4,6 +4,31 @@ const asyncHandler = require("express-async-handler");
 const generateToken = require("../utils/generateToken");
 const db = require("../config/database");
 
+//@desc signup
+//@route POST /api/v1/auth/signup
+//@access public
+exports.signup = asyncHandler(async (req, res, next) => {
+  //1-create user
+  const { name, email, password, phone } = req.body;
+  const hashedPassword = await bcrypt.hash(password, 10);
+  const created_at = new Date();
+  const updated_at = new Date();
+  db.query(
+    `INSERT INTO users 
+      (name,email,password,role,phone,status,created_at,updated_at)
+    VALUES
+       (?, ? , ? ,"applicant" , ? , "active" , ? , ?)`,
+    [name, email, hashedPassword, phone, created_at, updated_at],
+    (err, results) => {
+      if (err) throw err;
+
+      res.status(201).json({
+        message: "welcom with us",
+        data: results.insertId,
+      });
+    }
+  );
+});
 //@desc login
 //@route POST /api/v1/auth/login
 //@access public

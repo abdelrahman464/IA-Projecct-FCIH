@@ -30,9 +30,12 @@ exports.getUser = asyncHandler((req, res) => {
 exports.createUser = asyncHandler(async (req, res) => {
   const { name, email, password, phone } = req.body;
   const hashedPassword = await bcrypt.hash(password, 10);
+  const created_at = new Date();
+  const updated_at = new Date();
   db.query(
-    "INSERT INTO users (name, email, password, role , phone) VALUES (? , ? , ? , 'applicant', ?)",
-    [name, email, hashedPassword, phone],
+    `INSERT INTO users (name, email, password, role , phone,created_at,updated_at)
+     VALUES (? , ? , ? , 'applicant', ?,?,?)`,
+    [name, email, hashedPassword, phone, created_at, updated_at],
     (err, results) => {
       if (err) throw err;
 

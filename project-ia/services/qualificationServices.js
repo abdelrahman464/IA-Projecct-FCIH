@@ -84,9 +84,10 @@ exports.searchInJobs = asyncHandler((req, res) => {
   // Build SQL query to search for records that match the search query
   const values = [`%${keyword}%`];
   // Execute the SQL query
-
   db.query(
-    `SELECT qualifications.description,jobs.position,jobs.requirements,jobs.salary,jobs.description as q
+    `SELECT jobs.id,jobs.position,jobs.requirements,jobs.salary,
+            jobs.description as job_description,
+            qualifications.description
      FROM qualifications
      JOIN jobs
      ON jobs.id = qualifications.job_id
@@ -113,7 +114,7 @@ exports.searchInJobs = asyncHandler((req, res) => {
 // @access  public
 exports.getLoggedUserSearchHistory = asyncHandler((req, res) => {
   db.query(
-    "SELECT * FROM searchedjobs WHERE user_id = ? ",
+    "SELECT created_at,word FROM searchedjobs WHERE user_id = ? ",
     [req.user.id],
     (err, results) => {
       if (err) throw new Error(err);
