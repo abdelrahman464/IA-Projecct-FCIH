@@ -44,12 +44,14 @@ router
     deleteQualification
   );
 router
-  .route("/search")
+  .route("/search/history")
   .get(
     authServices.protect,
     authServices.allowedTo("applicant"),
     getLoggedUserSearchHistory
-  )
+  );
+router
+  .route("/search")
   .post(
     authServices.protect,
     authServices.allowedTo("applicant"),
