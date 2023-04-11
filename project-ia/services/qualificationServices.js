@@ -83,12 +83,14 @@ exports.searchInJobs = asyncHandler((req, res) => {
   const keyword = req.body.keyword; // get search query from request query parameters
   // Build SQL query to search for records that match the search query
   const values = [`%${keyword}%`];
-
   // Execute the SQL query
+
   db.query(
-    `SELECT *
+    `SELECT qualifications.description,jobs.position,jobs.requirements,jobs.salary,jobs.description as q
      FROM qualifications
-     WHERE description LIKE ?`,
+     JOIN jobs
+     ON jobs.id = qualifications.job_id
+     WHERE qualifications.description LIKE ?`,
     values,
     (err, results) => {
       if (err) throw new Error(err);

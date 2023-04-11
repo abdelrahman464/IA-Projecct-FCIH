@@ -48,7 +48,7 @@ router
   .get(
     authServices.protect,
     authServices.allowedTo("applicant"),
-    getLoggedUserSearchHistory
+    getLoggedUserSearchHistory 
   );
 router
   .route("/search")
