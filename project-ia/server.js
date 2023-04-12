@@ -1,8 +1,8 @@
 const express = require("express");
 //middleware
 const morgan = require("morgan");
-//database
-// const dbConnection = require("./config/database");
+const cors = require("cors");
+
 
 const mountRoutes = require("./routes");
 
@@ -17,6 +17,7 @@ dotenv.config({ path: "config.env" });
 
 //express app
 const app = express();
+app.use(cors());
 //middlewares
 app.use(express.json());
 
