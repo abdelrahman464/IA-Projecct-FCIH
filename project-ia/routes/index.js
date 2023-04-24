@@ -3,7 +3,6 @@ const jobRoute = require("./jobRoute");
 const applicationRoute = require("./applicationRoute");
 const qualificationRoute = require("./qualificationRoute");
 const authRoute = require("./authRoute");
-
 const mountRoutes = (app) => {
   // Mount Routes
   app.use("/api/v1/users", userRoute);
