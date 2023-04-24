@@ -18,7 +18,7 @@ const router = express.Router();
 
 router
   .route("/")
-  .get(authServices.protect, authServices.allowedTo("applicant"), getJobs)
+  .get(getJobs)
   .post(
     authServices.protect,
     authServices.allowedTo("admin"),
