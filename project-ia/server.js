@@ -18,6 +18,7 @@ dotenv.config({ path: "config.env" });
 //express app
 const app = express();
 app.use(cors());
+app.options("*", cors());
 //middlewares
 app.use(express.json());
 
