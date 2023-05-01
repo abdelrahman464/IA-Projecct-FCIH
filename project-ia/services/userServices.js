@@ -53,9 +53,10 @@ exports.updateUser = asyncHandler(async (req, res) => {
   const id = req.params.id;
   const { name, email, password, phone, role } = req.body;
   const hashedPassword = await bcrypt.hash(password, 10);
+  const updated_at = new Date();
   db.query(
-    "UPDATE users SET name = ?, email = ?, password = ? , phone = ? ,role = ? WHERE id = ?",
-    [name, email, hashedPassword, phone, role, id],
+    "UPDATE users SET name = ?, email = ?, password = ? , phone = ? ,role = ?,updated_at WHERE id = ?",
+    [name, email, hashedPassword, phone, role,updated_at, id],
     (err, results) => {
       if (err) throw err;
       res.json({ message: "User updated successfully" });
