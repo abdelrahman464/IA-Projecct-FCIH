@@ -68,7 +68,7 @@ exports.deleteApllication = asyncHandler((req, res) => {
   });
 });
 // @desc    accept an application
-// @route   PUT /api/v1/applications/:id
+// @route   PUT /api/v1/applications/:id/accept
 // @access  Private/protected (admin)
 exports.acceptApllication = asyncHandler(async (req, res) => {
   const id = req.params.id;
@@ -107,7 +107,7 @@ exports.acceptApllication = asyncHandler(async (req, res) => {
   );
 });
 // @desc    reject an application
-// @route   PUT /api/v1/applications/:id
+// @route   PUT /api/v1/applications/:id/reject
 // @access  Private/protected (admin)
 exports.rejectApllication = asyncHandler(async (req, res) => {
   const id = req.params.id;
