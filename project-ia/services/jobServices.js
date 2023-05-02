@@ -25,7 +25,7 @@ exports.getJobsAdmin = asyncHandler((req, res) => {
 
 // @desc    Get specific job by id
 // @route   GET /api/v1/jobs/:id
-// @access  public
+// @access  protected
 exports.getJob = asyncHandler((req, res) => {
   const id = req.params.id;
   db.query("SELECT * FROM jobs WHERE id = ?", [id], (err, results) => {

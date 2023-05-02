@@ -9,7 +9,7 @@ const ApiError = require("../utils/apiError");
 exports.getUsers = asyncHandler((req, res) => {
   db.query("SELECT * FROM users", (err, results) => {
     if (err) throw err;
-    res.json(results);
+    res.json({ result: results.length, data: results });
   });
 });
 

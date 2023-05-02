@@ -7,7 +7,7 @@ const db = require("../config/database");
 exports.getQualifications = asyncHandler((req, res) => {
   db.query("SELECT * FROM qualifications", (err, results) => {
     if (err) throw err;
-    res.json(results);
+    res.json({ result: results.length, data: results });
   });
 });
 
@@ -87,7 +87,7 @@ exports.searchInJobs = asyncHandler((req, res) => {
   db.query(
     `SELECT jobs.id,jobs.position,jobs.requirements,jobs.salary,
             jobs.description as job_description,
-            qualifications.description
+            qualifications.description as qualification_description
      FROM qualifications
      JOIN jobs
      ON jobs.id = qualifications.job_id
@@ -118,7 +118,7 @@ exports.getLoggedUserSearchHistory = asyncHandler((req, res) => {
     [req.user.id],
     (err, results) => {
       if (err) throw new Error(err);
-      res.status(200).json(results);
+      res.status(200).json({ result: results.length, data: results });
     }
   );
 });
