@@ -2,6 +2,18 @@ const { check, body } = require("express-validator");
 const validatorMiddleware = require("../../middlewares/validatorMiddleware");
 const db = require("../../config/database");
 
+const isEmailAlreadyInUse = (email) => {
+  return new Promise((resolve, reject) => {
+    db.query('SELECT COUNT(*) AS count FROM users WHERE email = ?', [email], (err, results) => {
+      if (err) {
+        reject(err);
+      } else {
+        const count = results[0].count;
+        resolve(count > 0);
+      }
+    });
+  });
+};
 exports.createUserValidator = [
   check("name")
     .notEmpty()
@@ -16,13 +28,9 @@ exports.createUserValidator = [
     .withMessage("Email required")
     .isEmail()
     .withMessage("Invalid email address")
-    .custom(async (value) => {
-      const emailExists = await db.query(
-        "SELECT * FROM users WHERE email = ?",
-        [value]
-      );
-      if (emailExists.length > 0) {
-        return Promise.reject(new Error("E-mail already in use"));
+    .custom(async (email) => {
+      if (await isEmailAlreadyInUse(email)) {
+        throw new Error('Email already in use');
       }
     }),
   check("password")
@@ -77,7 +85,7 @@ exports.updateUserValidator = [
       }
       return true;
     }),
-    
+
   check("role").optional(),
 
   check("phone")
