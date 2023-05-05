@@ -28,11 +28,21 @@ exports.getJobsAdmin = asyncHandler((req, res) => {
 // @access  protected
 exports.getJob = asyncHandler((req, res) => {
   const id = req.params.id;
-  db.query("SELECT * FROM jobs WHERE id = ?", [id], (err, results) => {
-    if (err) throw new Error(err);
+  db.query(
+    `SELECT jobs.id,jobs.position,jobs.requirements,jobs.salary,
+    jobs.description as job_description,
+    qualifications.description as qualification_description
+     FROM jobs
+    JOIN qualifications 
+    on qualifications.job_id = jobs.id 
+    WHERE jobs.id = ?`,
+    [id],
+    (err, results) => {
+      if (err) throw new Error(err);
 
-    res.status(200).json({ result: results.length, data: results });
-  });
+      res.status(200).json({ result: results.length, data: results });
+    }
+  );
 });
 // @desc    Create job
 // @route   POST  /api/v1/jobs
