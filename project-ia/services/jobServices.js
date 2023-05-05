@@ -6,10 +6,16 @@ const db = require("../config/database");
 // @access  public
 exports.getJobs = asyncHandler((req, res) => {
   db.query(
-    "SELECT * FROM jobs WHERE maxCandidateNumber > num_applicant",
+    `SELECT jobs.id,jobs.position,jobs.requirements,jobs.salary,
+    jobs.description as job_description,
+    qualifications.description as qualification_description
+     FROM jobs
+    JOIN qualifications 
+    on qualifications.job_id = jobs.id 
+     WHERE jobs.maxCandidateNumber > jobs.num_applicant`,
     (err, results) => {
       if (err) throw err;
-      res.json(results);
+      res.json({ result: results.length, data: results });
     }
   );
 });
@@ -17,10 +23,18 @@ exports.getJobs = asyncHandler((req, res) => {
 // @route   GET /api/v1/jobs/all
 // @access  private/protected (admin)
 exports.getJobsAdmin = asyncHandler((req, res) => {
-  db.query("SELECT * FROM jobs", (err, results) => {
-    if (err) throw err;
-    res.json(results);
-  });
+  db.query(
+    `SELECT jobs.id,jobs.position,jobs.requirements,jobs.salary,
+  jobs.description as job_description, jobs.num_applicant,jobs.maxCandidateNumber,
+  qualifications.description as qualification_description
+   FROM jobs
+  JOIN qualifications 
+  on qualifications.job_id = jobs.id `,
+    (err, results) => {
+      if (err) throw err;
+      res.json({ result: results.length, data: results });
+    }
+  );
 });
 
 // @desc    Get specific job by id
