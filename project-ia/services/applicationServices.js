@@ -5,21 +5,35 @@ const db = require("../config/database");
 // @route   GET /api/v1/applications
 // @access  private/protect (admin)
 exports.getApllications = asyncHandler((req, res) => {
-  db.query("SELECT * FROM applications", (err, results) => {
-    if (err) throw err;
-    res.json(results);
-  });
+  db.query(
+    `SELECT users.name as username ,applications.*
+    FROM applications 
+    JOIN users 
+    on applications.user_id = users.id
+  `,
+    (err, results) => {
+      if (err) throw err;
+      res.json(results);
+    }
+  );
 });
 // @desc    Get specific application by id
 // @route   GET /api/v1/applications/:id
 // @access  private/protect (admin)
 exports.getApllication = asyncHandler((req, res) => {
   const id = req.params.id;
-  db.query("SELECT * FROM applications WHERE id = ?", [id], (err, results) => {
-    if (err) throw new Error(err);
-
-    res.status(200).json({ result: results.length, data: results });
-  });
+  db.query(
+    `SELECT users.name as username ,applications.*
+    FROM applications 
+    JOIN users 
+    on applications.user_id = users.id 
+    WHERE applications.id = ?`,
+    [id],
+    (err, results) => {
+      if (err) throw new Error(err);
+      res.status(200).json({ result: results.length, data: results });
+    }
+  );
 });
 // @desc    send application
 // @route   POST /api/v1/applications
