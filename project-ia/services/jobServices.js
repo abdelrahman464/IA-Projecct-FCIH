@@ -7,10 +7,10 @@ const db = require("../config/database");
 exports.getJobs = asyncHandler((req, res) => {
   db.query(
     `SELECT jobs.id,jobs.position,jobs.requirements,jobs.salary,
-    jobs.description as job_description,
+    jobs.description as job_description,jobs.maxCandidateNumber,
     qualifications.description as qualification_description
      FROM jobs
-    JOIN qualifications 
+     LEFT JOIN qualifications 
     on qualifications.job_id = jobs.id 
      WHERE jobs.maxCandidateNumber > jobs.num_applicant`,
     (err, results) => {
@@ -28,7 +28,7 @@ exports.getJobsAdmin = asyncHandler((req, res) => {
   jobs.description as job_description, jobs.num_applicant,jobs.maxCandidateNumber,
   qualifications.description as qualification_description
    FROM jobs
-  JOIN qualifications 
+  LEFT JOIN qualifications 
   on qualifications.job_id = jobs.id `,
     (err, results) => {
       if (err) throw err;
@@ -44,17 +44,17 @@ exports.getJob = asyncHandler((req, res) => {
   const id = req.params.id;
   db.query(
     `SELECT jobs.id,jobs.position,jobs.requirements,jobs.salary,
-    jobs.description as job_description,
+    jobs.description as job_description ,	jobs.maxCandidateNumber,
     qualifications.description as qualification_description
      FROM jobs
-    JOIN qualifications 
+     LEFT JOIN qualifications 
     on qualifications.job_id = jobs.id 
     WHERE jobs.id = ?`,
     [id],
     (err, results) => {
       if (err) throw new Error(err);
 
-      res.status(200).json({ result: results.length, data: results });
+      res.status(200).json({  data: results });
     }
   );
 });
