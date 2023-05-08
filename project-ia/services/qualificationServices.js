@@ -91,7 +91,7 @@ exports.searchInJobs = asyncHandler((req, res) => {
      FROM qualifications
      JOIN jobs
      ON jobs.id = qualifications.job_id
-     WHERE qualifications.description LIKE ?`,
+     WHERE qualifications.description LIKE ? AND  jobs.maxCandidateNumber > jobs.num_applicant  `,
     values,
     (err, results) => {
       if (err) throw new Error(err);
