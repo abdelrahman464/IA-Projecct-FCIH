@@ -6,10 +6,11 @@ const db = require("../config/database");
 // @access  private/protect (admin)
 exports.getApllications = asyncHandler((req, res) => {
   db.query(
-    `SELECT users.name as username ,applications.*
-    FROM applications 
-    JOIN users 
-    on applications.user_id = users.id
+    `SELECT jobs.position,applications.*
+    FROM applications
+    JOIN jobs 
+    on applications.job_id = jobs.id
+
   `,
     (err, results) => {
       if (err) throw err;
