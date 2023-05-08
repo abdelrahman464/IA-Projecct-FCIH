@@ -141,7 +141,12 @@ exports.rejectApllication = asyncHandler(async (req, res) => {
 exports.getLoggedUserApllications = asyncHandler((req, res) => {
   const userId = req.user.id;
   db.query(
-    "SELECT * FROM applications WHERE user_id = ? ",
+    `SELECT jobs.position,applications.id,applications.status,
+      applications.created_at,applications.attachment
+      FROM applications
+      JOIN jobs 
+      on applications.job_id = jobs.id
+      WHERE applications.user_id = ? `,
     [userId],
     (err, results) => {
       if (err) throw new Error(err);
